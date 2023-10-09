@@ -23,33 +23,69 @@ void DubleChein::insert()
 
 void DubleChein::remove()
 {
-	head = head->getNext();
-	head->setPrevious(NULL);
-	amount--;
+	if (amount > 0)
+	{
+		if (amount == 1)
+		{
+			head = head->getNext();
+
+			amount--;
+		}
+		else
+		{
+			head = head->getNext();
+			head->setPrevious(NULL);
+			amount--;
+		}
+	}
 }
 
 void DubleChein::insert(int n)
 {
-	Cachorro c;
-	c.fill();
-	Nodo* newer = new Nodo(c);
-	Nodo* previous = this->getElement(n - 1);
-	newer->setNext(previous->getNext());
-	newer->setPrevious(previous);
-	previous->getNext()->setPrevious(newer);
-	previous->setNext(newer);
+	if (n == 1)
+		insert();
 
-	amount++;
+	else if (n == amount + 1)
+	{
+		Cachorro c;
+		c.fill();
+		Nodo* behind = this->getElement(n - 1);
+		Nodo* newer = new Nodo(c);
+		behind->setNext(newer);
+		newer->setPrevious(behind);
+		amount++;
+	}
+
+	else if (n < amount and n > 0)
+	{
+		Cachorro c;
+		c.fill();
+		Nodo* in = this->getElement(n);
+		Nodo* newer = new Nodo(c);
+		Nodo* previous = in->getPrevious();
+		previous->setNext(newer);
+		newer->setNext(in);
+		in->setPrevious(newer);
+		newer->setPrevious(previous);
+		amount++;
+	}
+
+	else
+		cout << "Not possible to put the item " << n - amount << " positions ahead." << endl;
 }
 
 void DubleChein::remove(int n)
 {
-	Nodo* previous = this->getElement(n - 1);
-	Nodo* out = previous->getNext();
-	out->getNext()->setPrevious(previous);
-	previous->setNext(out->getNext());
-	
-	amount--;
+	if (n < amount and n > 0)
+	{
+		Nodo* out = this->getElement(n);
+		Nodo* behind = out->getPrevious();
+		out->getNext()->setPrevious(behind);
+		behind->setNext(out->getNext());
+		amount--;
+	}
+	else
+		cout << "Don't exist this position.\n" << endl;
 }
 
 Nodo* DubleChein::getElement(int n)
@@ -66,4 +102,19 @@ Nodo* DubleChein::getElement(int n)
 		return p;
 	else
 		return NULL;
+}
+
+void DubleChein::print()
+{
+	Nodo* p = head;
+	for (int i = 0; i < amount; i++)
+	{
+		if (p->getNext() != NULL)
+		{
+			p->getItem().print();
+			p = p->getNext();
+		}
+		else
+			p->getItem().print();
+	}
 }
