@@ -14,6 +14,8 @@ public:
 
 	Nodo* getElement(int n);
 
+	void print();
+
 private:
 	int amount;
 	Nodo* head;
